@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Detalles del Siniestro{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-header bg-dark text-white">
+      <h2 class="mb-0">🚨 Detalles del Siniestro</h2>
+    </div>
+    <div class="card-body">
+      <table class="table table-bordered align-middle">
+        <tr><th>ID</th><td>{{ siniestro.id }}</td></tr>
+        <tr><th>Fecha</th><td>{{ siniestro.fecha|date('d/m/Y') }}</td></tr>
+        <tr><th>Hora</th><td>{{ siniestro.hora|date('H:i') }}</td></tr>
+        <tr><th>Clima</th><td>{{ siniestro.clima ? siniestro.clima.descripcion : '-' }}</td></tr>
+        <tr><th>Observaciones</th><td>{{ siniestro.obs ?: '-' }}</td></tr>
+      </table>
+
+      <div class="mt-4">
+        <a href="{{ path('siniestro_index') }}" class="btn btn-secondary">⬅ Volver al listado</a>
+
+        {% if is_granted('ROLE_ADMIN') %}
+          <a href="{{ path('siniestro_edit', { id: siniestro.id }) }}" class="btn btn-warning">Editar</a>
+          <form method="post" action="{{ path('siniestro_delete', { id: siniestro.id }) }}" style="display:inline-block;" onsubmit="return confirm('¿Seguro que deseas eliminar este registro?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ siniestro.id) }}">
+            <button class="btn btn-danger">Eliminar</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+{% block title %}Dashboard de Siniestros{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+  <h1 class="fw-bold mb-4 text-center">Dashboard de Siniestros Viales</h1>
+
+  {# Solo el admin puede ver el botón PDF #}
+  {% if is_granted('ROLE_ADMIN') %}
+  <div class="d-flex justify-content-end mb-4">
+    <a href="{{ path('dashboard_export_pdf') }}" class="btn btn-danger">📄 Exportar PDF</a>
+  </div>
+  {% endif %}
+
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="card shadow">
+        <div class="card-header bg-dark text-white fw-bold">Siniestros por mes</div>
+        <div class="card-body">
+          <canvas id="chartMes"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <div class="card shadow">
+        <div class="card-header bg-dark text-white fw-bold">Distribución por clima</div>
+        <div class="card-body">
+          <canvas id="chartClima"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Parsear JSON de Twig de forma segura
+const siniestrosPorMes = JSON.parse("{{ porMes|json_encode|e('js') }}");
+const siniestrosPorClima = JSON.parse("{{ porClima|json_encode|e('js') }}");
+
+// ======= GRÁFICO 1: Siniestros por mes =======
+const ctxMes = document.getElementById('chartMes').getContext('2d');
+const meses = siniestrosPorMes.map(item => 'Mes ' + item.mes);
+const valoresMes = siniestrosPorMes.map(item => item.total);
+
+new Chart(ctxMes, {
+  type: 'bar',
+  data: {
+    labels: meses,
+    datasets: [{
+      label: 'Cantidad de siniestros',
+      data: valoresMes,
+      backgroundColor: 'rgba(54, 162, 235, 0.6)',
+      borderColor: 'rgba(54, 162, 235, 1)',
+      borderWidth: 1
+    }]
+  },
+  options: { responsive: true, scales: { y: { beginAtZero: true } } }
+});
+
+// ======= GRÁFICO 2: Distribución por clima =======
+const ctxClima = document.getElementById('chartClima').getContext('2d');
+const climas = siniestrosPorClima.map(item => item.clima || 'Sin datos');
+const valoresClima = siniestrosPorClima.map(item => item.total);
+
+new Chart(ctxClima, {
+  type: 'pie',
+  data: {
+    labels: climas,
+    datasets: [{
+      data: valoresClima,
+      backgroundColor: [
+        '#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#9966FF'
+      ]
+    }]
+  },
+  options: { responsive: true }
+});
+</script>
+
+{% endblock %}

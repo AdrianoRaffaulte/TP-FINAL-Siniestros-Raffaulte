@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block title %}Nuevo Siniestro{% endblock %}
+
+{% block body %}
+<h1 class="text-2xl font-bold mb-4">Registrar Siniestro</h1>
+
+{{ form_start(form) }}
+  {{ form_widget(form) }}
+  <button class="btn btn-success mt-3">Guardar</button>
+{{ form_end(form) }}
+
+<a href="{{ path('siniestro_index') }}" class="btn btn-secondary mt-2">Volver</a>
+{% endblock %}

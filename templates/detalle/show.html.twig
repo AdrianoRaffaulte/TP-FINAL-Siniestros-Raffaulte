@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+{% block title %}Detalle del Participante{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-header bg-dark text-white">
+      <h2 class="mb-0">🧾 Detalle del Participante</h2>
+    </div>
+    <div class="card-body">
+      <table class="table table-bordered align-middle">
+        <tr><th>ID</th><td>{{ detalle.id }}</td></tr>
+        <tr><th>Persona</th><td>{{ detalle.persona.nombre }} {{ detalle.persona.apellido }}</td></tr>
+        <tr><th>Rol</th><td>{{ detalle.rol.descripcion }}</td></tr>
+        <tr><th>Siniestro N°</th><td>{{ detalle.siniestro.id }}</td></tr>
+        <tr><th>Fecha</th><td>{{ detalle.siniestro.fecha|date('d/m/Y') }}</td></tr>
+        <tr><th>Hora</th><td>{{ detalle.siniestro.hora|date('H:i') }}</td></tr>
+        <tr><th>Clima</th><td>{{ detalle.siniestro.clima ? detalle.siniestro.clima.descripcion : '-' }}</td></tr>
+        <tr><th>Observaciones</th><td>{{ detalle.siniestro.obs ?: '-' }}</td></tr>
+      </table>
+
+      <div class="mt-4">
+        <a href="{{ path('detalle_index') }}" class="btn btn-secondary">⬅ Volver</a>
+
+        {% if is_granted('ROLE_ADMIN') %}
+          <a href="{{ path('detalle_edit', { id: detalle.id }) }}" class="btn btn-warning">Editar</a>
+          <form method="post" action="{{ path('detalle_delete', { id: detalle.id }) }}" style="display:inline-block;" onsubmit="return confirm('¿Seguro que deseas eliminar este registro?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ detalle.id) }}">
+            <button class="btn btn-danger">Eliminar</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

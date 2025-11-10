@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Iniciar Sesión - Siniestros Viales{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="card shadow-lg p-4" style="width: 380px; border-radius: 12px;">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold text-dark mb-1">Siniestros Viales</h2>
+            <p class="text-muted mb-0">Iniciar sesión en el sistema</p>
+        </div>
+
+        {% if error %}
+            <div class="alert alert-danger py-2 text-center">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+        {% endif %}
+
+        <form method="post" action="{{ path('login') }}">
+            <div class="mb-3">
+                <label for="username" class="form-label fw-semibold">Usuario</label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    class="form-control form-control-lg"
+                    value="{{ last_username }}"
+                    required
+                    autofocus
+                >
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label fw-semibold">Contraseña</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="form-control form-control-lg"
+                    required
+                >
+            </div>
+
+            <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-primary btn-lg fw-bold">
+                    Iniciar sesión
+                </button>
+            </div>
+        </form>
+
+        <hr class="my-4">
+
+        <div class="text-center text-muted" style="font-size: 0.9rem;">
+            <p>Raffaulte Adriano</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

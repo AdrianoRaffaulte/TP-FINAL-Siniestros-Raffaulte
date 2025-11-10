@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Detalles de Persona{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-header bg-dark text-white">
+      <h2 class="mb-0">👤 Detalles de la Persona</h2>
+    </div>
+    <div class="card-body">
+      <table class="table table-bordered align-middle">
+        <tr>
+          <th style="width: 200px;">ID</th>
+          <td>{{ persona.id }}</td>
+        </tr>
+        <tr>
+          <th>Nombre</th>
+          <td>{{ persona.nombre }}</td>
+        </tr>
+        <tr>
+          <th>Apellido</th>
+          <td>{{ persona.apellido }}</td>
+        </tr>
+        <tr>
+          <th>Sexo</th>
+          <td>{{ persona.sexo ? persona.sexo.descripcion : '-' }}</td>
+        </tr>
+        <tr>
+          <th>Fecha de nacimiento</th>
+          <td>{{ persona.fechaNac ? persona.fechaNac|date('d/m/Y') : '-' }}</td>
+        </tr>
+      </table>
+
+      <div class="mt-4">
+        <a href="{{ path('persona_index') }}" class="btn btn-secondary">⬅ Volver al listado</a>
+
+        {% if is_granted('ROLE_ADMIN') %}
+          <a href="{{ path('persona_edit', { id: persona.id }) }}" class="btn btn-warning">Editar</a>
+          <form method="post" action="{{ path('persona_delete', { id: persona.id }) }}" style="display:inline-block;" onsubmit="return confirm('¿Seguro que deseas eliminar este registro?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ persona.id) }}">
+            <button class="btn btn-danger">Eliminar</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
